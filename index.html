@@ -98,6 +98,54 @@
     <p>
         Nossa primeira aventura está começando...
     </p>
+    <script>
+
+    // Pegamos a Merlin e o oceano
+    const merlin = document.getElementById("merlin");
+    const oceano = document.getElementById("oceano");
+
+    // Posição inicial da Merlin
+    let posicaoX = 100;
+    let posicaoY = 200;
+
+    // Quantos pixels ela nada a cada movimento
+    const velocidade = 15;
+
+    // Detecta quando apertamos uma tecla
+    document.addEventListener("keydown", function(evento) {
+
+        if (evento.key === "ArrowRight") {
+            posicaoX += velocidade;
+        }
+
+        if (evento.key === "ArrowLeft") {
+            posicaoX -= velocidade;
+        }
+
+        if (evento.key === "ArrowUp") {
+            posicaoY -= velocidade;
+        }
+
+        if (evento.key === "ArrowDown") {
+            posicaoY += velocidade;
+        }
+
+        // Impede Merlin de sair do oceano
+        const limiteX = oceano.clientWidth - merlin.offsetWidth;
+        const limiteY = oceano.clientHeight - merlin.offsetHeight;
+
+        posicaoX = Math.max(0, Math.min(posicaoX, limiteX));
+        posicaoY = Math.max(0, Math.min(posicaoY, limiteY));
+
+        // Atualiza a posição na tela
+        merlin.style.left = posicaoX + "px";
+        merlin.style.top = posicaoY + "px";
+
+        // Impede as setas de rolarem a página
+        evento.preventDefault();
+    });
+
+</script>
 
 </body>
 
