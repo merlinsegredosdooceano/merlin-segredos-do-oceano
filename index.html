@@ -81,8 +81,8 @@
         /* Peixe-palhaço em pixel art, independente dos controles da Merlin */
         #peixe-palhaco {
             position: absolute;
-            left: 58%;
-            top: 35%;
+            left: 66%;
+            top: 44%;
             width: 96px;
             height: 64px;
             z-index: 2;
@@ -97,6 +97,26 @@
             filter: drop-shadow(3px 4px 0 rgba(0, 33, 54, .25));
         }
 
+        /* Pequeno recife para a primeira missão de exploração. */
+        #recife-palhaco {
+            position: absolute;
+            left: 54%;
+            top: 29%;
+            width: 225px;
+            height: 205px;
+            z-index: 1;
+            pointer-events: none;
+        }
+        #recife-palhaco svg { width: 100%; height: 100%; image-rendering: pixelated; }
+        #missao-atual {
+            max-width: 650px;
+            margin: 12px auto 0;
+            padding: 10px 14px;
+            background: #073d59;
+            border: 1px solid #397e91;
+            border-radius: 8px;
+            color: #e0f7ff;
+        }
         #painel-descoberta {
             display: none;
             margin: 12px auto;
@@ -123,9 +143,31 @@
         e desvende seus segredos.
     </p>
 
+    <p id="missao-atual" aria-live="polite"><strong>Missão 1 — Descubra o peixe-palhaço:</strong> explore o oceano com as setas e aproxime a Merlin do recife de corais.</p>
+
     <div id="oceano">
 
         <div class="areia"></div>
+
+        <!-- Recife estático: corais, rochas e anêmona formam o habitat do peixe. -->
+        <div id="recife-palhaco" role="img" aria-label="Recife de corais coloridos com anêmona">
+            <svg viewBox="0 0 225 205" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges" aria-hidden="true">
+                <!-- Rochas e base do recife -->
+                <path d="M10 168 H34 V150 H66 V161 H104 V145 H150 V159 H189 V169 H215 V198 H10 Z" fill="#31566d"/>
+                <path d="M24 174 H61 V166 H104 V181 H144 V168 H199 V193 H24 Z" fill="#58768a"/>
+                <path d="M38 187 H82 V193 H38 Z M115 176 H152 V182 H115 Z" fill="#92a8a6"/>
+                <!-- Coral rosa ramificado -->
+                <path d="M44 174 V120 H31 V101 H21 V84 H34 V96 H45 V117 H50 V83 H60 V67 H71 V81 H62 V123 H75 V109 H88 V97 H99 V111 H86 V131 H65 V174 Z" fill="#fb7185" stroke="#9f305b" stroke-width="4"/>
+                <path d="M50 165 V133 H61 V165 Z" fill="#fecdd3"/>
+                <!-- Coral amarelo -->
+                <path d="M148 178 V125 H136 V112 H128 V95 H140 V106 H153 V121 H162 V86 H175 V103 H171 V141 H183 V120 H194 V105 H205 V125 H192 V151 H177 V178 Z" fill="#fbbf24" stroke="#b45309" stroke-width="4"/>
+                <!-- Pequeno coral roxo -->
+                <path d="M105 181 V142 H92 V130 H102 V136 H111 V108 H121 V134 H132 V122 H143 V137 H124 V181 Z" fill="#c084fc" stroke="#6b21a8" stroke-width="4"/>
+                <!-- Anêmona onde o peixe-palhaço vive -->
+                <path d="M124 107 L113 69 L121 64 L138 96 L136 56 L148 51 L151 95 L166 62 L177 67 L162 102 L190 79 L199 90 L169 116 L155 132 H128 Z" fill="#5eead4" stroke="#0f766e" stroke-width="4"/>
+                <path d="M128 121 H160 V142 H128 Z" fill="#2dd4bf"/>
+            </svg>
+        </div>
 
         <!-- Peixe-palhaço: desenho vetorial com formas quadradas em estilo pixel art -->
         <div id="peixe-palhaco" role="img" aria-label="Peixe-palhaço laranja com listras brancas">
@@ -160,7 +202,7 @@
     <p id="contador-especies" aria-live="polite">Espécies descobertas: 0/1</p>
 
     <section id="painel-descoberta" aria-live="polite" aria-label="Informações da espécie descoberta">
-        <h2>🎉 Nova espécie descoberta!</h2>
+        <h2>🎉 Missão 1 concluída! Nova espécie descoberta!</h2>
         <h3>Peixe-palhaço</h3>
         <p><strong>Nome científico:</strong> <em>Amphiprion ocellaris</em></p>
         <p>🐠 Curiosidade: o peixe-palhaço vive entre os tentáculos de anêmonas-do-mar. Ele recebe proteção, enquanto ajuda a anêmona, por exemplo, afastando alguns predadores.</p>
@@ -185,6 +227,7 @@
     // Guardamos a descoberta para que ela não seja repetida ao atualizar a página.
     const peixePalhaco = document.getElementById("peixe-palhaco");
     const contadorEspecies = document.getElementById("contador-especies");
+    const missaoAtual = document.getElementById("missao-atual");
     const painelDescoberta = document.getElementById("painel-descoberta");
     const chaveDescoberta = "merlin-especie-peixe-palhaco-v1";
     let peixeDescoberto = false;
@@ -197,6 +240,7 @@
 
     function atualizarContador() {
         contadorEspecies.textContent = "Espécies descobertas: " + (peixeDescoberto ? 1 : 0) + "/1";
+        if (peixeDescoberto) missaoAtual.textContent = "✅ Missão 1 concluída — peixe-palhaço descoberto!";
     }
 
     function verificarDescoberta() {
