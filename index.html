@@ -82,7 +82,7 @@
         #peixe-palhaco {
             position: absolute;
             left: 66%;
-            top: 44%;
+            bottom: 112px;
             width: 96px;
             height: 64px;
             z-index: 2;
@@ -101,7 +101,7 @@
         #recife-palhaco {
             position: absolute;
             left: 54%;
-            top: 29%;
+            bottom: 49px;
             width: 225px;
             height: 205px;
             z-index: 1;
@@ -160,7 +160,11 @@
         #abrir-descoberta.visivel { display: block; }
         #contador-especies { font-weight: bold; color: #5eead4; }
         #reiniciar-jogo {
-            margin: 4px auto 16px;
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            z-index: 5;
+            margin: 0;
             padding: 10px 18px;
             background: #0f766e;
             color: white;
@@ -189,6 +193,7 @@
     <p id="missao-atual" aria-live="polite"><strong>Missão 1 — Descubra o peixe-palhaço:</strong> explore o oceano com as setas e aproxime a Merlin do recife de corais.</p>
 
     <div id="oceano">
+        <button id="reiniciar-jogo" type="button">↻ Reiniciar jogo</button>
 
         <div class="areia"></div>
 
@@ -199,38 +204,61 @@
                 <path d="M10 168 H34 V150 H66 V161 H104 V145 H150 V159 H189 V169 H215 V198 H10 Z" fill="#31566d"/>
                 <path d="M24 174 H61 V166 H104 V181 H144 V168 H199 V193 H24 Z" fill="#58768a"/>
                 <path d="M38 187 H82 V193 H38 Z M115 176 H152 V182 H115 Z" fill="#92a8a6"/>
+                <path d="M18 184 H36 V177 H58 V184 H80 V194 H18 Z M152 185 H169 V177 H193 V188 H207 V197 H152 Z" fill="#25445d"/>
+                <path d="M30 179 H50 V183 H30 Z M168 181 H186 V185 H168 Z" fill="#9bb1aa"/>
+                <rect x="85" y="189" width="7" height="5" fill="#e9c46a"/>
+                <rect x="102" y="196" width="8" height="4" fill="#e9c46a"/>
                 <!-- Coral rosa ramificado -->
                 <path d="M44 174 V120 H31 V101 H21 V84 H34 V96 H45 V117 H50 V83 H60 V67 H71 V81 H62 V123 H75 V109 H88 V97 H99 V111 H86 V131 H65 V174 Z" fill="#fb7185" stroke="#9f305b" stroke-width="4"/>
                 <path d="M50 165 V133 H61 V165 Z" fill="#fecdd3"/>
+                <rect x="25" y="90" width="7" height="6" fill="#fecdd3"/>
+                <rect x="56" y="72" width="7" height="8" fill="#ffe4e6"/>
+                <rect x="82" y="103" width="7" height="7" fill="#fecdd3"/>
+                <path d="M36 150 H43 V169 H36 Z" fill="#be345f"/>
                 <!-- Coral amarelo -->
                 <path d="M148 178 V125 H136 V112 H128 V95 H140 V106 H153 V121 H162 V86 H175 V103 H171 V141 H183 V120 H194 V105 H205 V125 H192 V151 H177 V178 Z" fill="#fbbf24" stroke="#b45309" stroke-width="4"/>
+                <path d="M154 151 H163 V171 H154 Z M167 115 H173 V136 H167 Z" fill="#fde68a"/>
+                <rect x="133" y="100" width="7" height="7" fill="#fff1b6"/>
+                <rect x="194" y="108" width="7" height="9" fill="#fff1b6"/>
                 <!-- Pequeno coral roxo -->
                 <path d="M105 181 V142 H92 V130 H102 V136 H111 V108 H121 V134 H132 V122 H143 V137 H124 V181 Z" fill="#c084fc" stroke="#6b21a8" stroke-width="4"/>
+                <rect x="114" y="118" width="7" height="8" fill="#ead5ff"/>
+                <rect x="98" y="132" width="6" height="6" fill="#e9d5ff"/>
                 <!-- Anêmona onde o peixe-palhaço vive -->
                 <path d="M124 107 L113 69 L121 64 L138 96 L136 56 L148 51 L151 95 L166 62 L177 67 L162 102 L190 79 L199 90 L169 116 L155 132 H128 Z" fill="#5eead4" stroke="#0f766e" stroke-width="4"/>
                 <path d="M128 121 H160 V142 H128 Z" fill="#2dd4bf"/>
+                <path d="M120 65 L128 89 L132 98 L125 75 Z M145 55 L145 95 L149 97 L150 60 Z M174 70 L158 100 L162 102 L181 74 Z" fill="#a7f3d0"/>
+                <rect x="131" y="121" width="23" height="6" fill="#99f6e4"/>
             </svg>
         </div>
 
         <!-- Peixe-palhaço: desenho vetorial com formas quadradas em estilo pixel art -->
         <div id="peixe-palhaco" role="img" aria-label="Peixe-palhaço laranja com listras brancas">
             <svg viewBox="0 0 96 64" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges" aria-hidden="true">
-                <!-- cauda e nadadeiras -->
+                <!-- cauda e nadadeiras: contornos e reflexos pixelados -->
                 <path d="M19 26 H10 V19 H2 V45 H10 V38 H19 Z" fill="#f97316" stroke="#753613" stroke-width="3"/>
+                <path d="M7 25 H13 V39 H7 Z" fill="#fdba74"/>
+                <path d="M16 29 H22 V35 H16 Z" fill="#9a3412"/>
                 <path d="M37 19 V9 H48 V5 H59 V16 H70 V23 Z" fill="#fb923c" stroke="#753613" stroke-width="3"/>
                 <path d="M41 45 V54 H53 V59 H65 V46 Z" fill="#f97316" stroke="#753613" stroke-width="3"/>
                 <!-- corpo -->
                 <path d="M15 25 H23 V18 H36 V13 H62 V18 H76 V24 H85 V31 H91 V39 H84 V45 H74 V50 H36 V46 H23 V40 H15 Z"
                       fill="#f97316" stroke="#753613" stroke-width="3"/>
+                <path d="M24 28 H34 V24 H57 V27 H69 V33 H79 V38 H69 V42 H32 V38 H24 Z" fill="#fb923c"/>
+                <path d="M46 16 H59 V20 H46 Z M28 41 H42 V45 H28 Z" fill="#fed7aa"/>
                 <!-- faixas brancas com contornos escuros -->
                 <path d="M34 15 H44 V19 H48 V44 H43 V48 H34 V44 H30 V20 H34 Z"
                       fill="#fff7ed" stroke="#753613" stroke-width="2"/>
                 <path d="M65 18 H73 V22 H77 V45 H70 V49 H63 V44 H66 V23 H65 Z"
                       fill="#fff7ed" stroke="#753613" stroke-width="2"/>
+                <path d="M35 19 H39 V43 H35 Z M67 24 H71 V42 H67 Z" fill="#ffffff"/>
+                <path d="M36 7 H48 V12 H58 V15 H43 V12 H36 Z" fill="#fdba74"/>
                 <!-- olho e brilho -->
                 <rect x="80" y="28" width="7" height="7" fill="#1f2937"/>
                 <rect x="81" y="29" width="2" height="2" fill="#ffffff"/>
                 <rect x="88" y="39" width="5" height="2" fill="#753613"/>
+                <rect x="78" y="37" width="3" height="3" fill="#fdba74"/>
+                <rect x="86" y="42" width="3" height="2" fill="#9a3412"/>
             </svg>
         </div>
 
@@ -252,7 +280,6 @@
     </div>
 
     <p id="contador-especies" aria-live="polite">Espécies descobertas: 0/1</p>
-    <button id="reiniciar-jogo" type="button">↻ Reiniciar jogo</button>
 
     <p>
         Nossa primeira aventura está começando...
