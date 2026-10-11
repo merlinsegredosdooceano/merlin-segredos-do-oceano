@@ -117,19 +117,47 @@
             border-radius: 8px;
             color: #e0f7ff;
         }
+        /* A descoberta aparece dentro da tela de jogo, sem rolagem. */
         #painel-descoberta {
             display: none;
-            margin: 12px auto;
-            padding: 16px;
-            max-width: 600px;
-            border: 2px solid #5eead4;
-            border-radius: 10px;
-            background: #075073;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: min(80%, 480px);
+            max-height: 80%;
+            overflow-y: auto;
+            box-sizing: border-box;
+            padding: 16px 20px;
+            border: 3px solid #5eead4;
+            border-radius: 12px;
+            background: rgba(3, 42, 65, .97);
+            box-shadow: 0 8px 28px rgba(0, 0, 0, .55);
             color: white;
+            z-index: 10;
         }
-
         #painel-descoberta.visivel { display: block; }
-        #painel-descoberta h2 { margin: 0 0 8px; color: #fef08a; }
+        #painel-descoberta h2 { margin: 0 0 8px; color: #fef08a; font-size: 21px; }
+        #painel-descoberta h3 { margin: 8px 0; }
+        #painel-descoberta p { margin: 8px 0; }
+        #minimizar-descoberta, #abrir-descoberta {
+            padding: 8px 12px;
+            color: #032c3e;
+            background: #5eead4;
+            border: 0;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        #abrir-descoberta {
+            display: none;
+            position: absolute;
+            left: 12px;
+            bottom: 12px;
+            z-index: 9;
+            box-shadow: 0 2px 8px #032c3e;
+        }
+        #abrir-descoberta.visivel { display: block; }
         #contador-especies { font-weight: bold; color: #5eead4; }
         #reiniciar-jogo {
             margin: 4px auto 16px;
@@ -212,17 +240,19 @@
     <div id="nome">Merlin</div>
 </div>
 
-    </div>
-
-    <p id="contador-especies" aria-live="polite">Espécies descobertas: 0/1</p>
-    <button id="reiniciar-jogo" type="button">↻ Reiniciar jogo</button>
-
-    <section id="painel-descoberta" aria-live="polite" aria-label="Informações da espécie descoberta">
+        <section id="painel-descoberta" aria-live="polite" aria-label="Informações da espécie descoberta">
         <h2>🎉 Missão 1 concluída! Nova espécie descoberta!</h2>
         <h3>Peixe-palhaço</h3>
         <p><strong>Nome científico:</strong> <em>Amphiprion ocellaris</em></p>
         <p>🐠 Curiosidade: o peixe-palhaço vive entre os tentáculos de anêmonas-do-mar. Ele recebe proteção, enquanto ajuda a anêmona, por exemplo, afastando alguns predadores.</p>
+        <button id="minimizar-descoberta" type="button">Minimizar</button>
     </section>
+        <button id="abrir-descoberta" type="button" aria-label="Reabrir curiosidade do peixe-palhaço">🐠 Ver descoberta</button>
+
+    </div>
+
+    <p id="contador-especies" aria-live="polite">Espécies descobertas: 0/1</p>
+    <button id="reiniciar-jogo" type="button">↻ Reiniciar jogo</button>
 
     <p>
         Nossa primeira aventura está começando...
@@ -245,6 +275,26 @@
     const contadorEspecies = document.getElementById("contador-especies");
     const missaoAtual = document.getElementById("missao-atual");
     const painelDescoberta = document.getElementById("painel-descoberta");
+    const botaoAbrirDescoberta = document.getElementById("abrir-descoberta");
+    let temporizadorDescoberta;
+
+    function minimizarDescoberta() {
+        clearTimeout(temporizadorDescoberta);
+        painelDescoberta.classList.remove("visivel");
+        if (peixeDescoberto) botaoAbrirDescoberta.classList.add("visivel");
+    }
+
+    function mostrarDescoberta() {
+        clearTimeout(temporizadorDescoberta);
+        botaoAbrirDescoberta.classList.remove("visivel");
+        painelDescoberta.classList.add("visivel");
+        // A leitura fica disponível novamente pelo botão minimizado.
+        temporizadorDescoberta = setTimeout(minimizarDescoberta, 10000);
+    }
+
+    document.getElementById("minimizar-descoberta").addEventListener("click", minimizarDescoberta);
+    botaoAbrirDescoberta.addEventListener("click", mostrarDescoberta);
+
     const chaveDescoberta = "merlin-especie-peixe-palhaco-v1";
     let peixeDescoberto = false;
 
@@ -272,7 +322,7 @@
         if (distancia <= 105) {
             peixeDescoberto = true;
             atualizarContador();
-            painelDescoberta.classList.add("visivel");
+            mostrarDescoberta();
             try {
                 localStorage.setItem(chaveDescoberta, "sim");
             } catch (erro) {
@@ -282,6 +332,7 @@
     }
 
     atualizarContador();
+    if (peixeDescoberto) botaoAbrirDescoberta.classList.add("visivel");
 
     // Reinicia a primeira missão e apaga apenas o progresso deste jogo.
     document.getElementById("reiniciar-jogo").addEventListener("click", function() {
@@ -296,7 +347,9 @@
         posicaoY = 200;
         merlin.style.left = posicaoX + "px";
         merlin.style.top = posicaoY + "px";
+        clearTimeout(temporizadorDescoberta);
         painelDescoberta.classList.remove("visivel");
+        botaoAbrirDescoberta.classList.remove("visivel");
         missaoAtual.innerHTML = "<strong>Missão 1 — Descubra o peixe-palhaço:</strong> explore o oceano com as setas e aproxime a Merlin do recife de corais.";
         atualizarContador();
     });
