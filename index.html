@@ -3,6 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Merlin: Segredos do Oceano</title>
 
     <style>
@@ -173,6 +174,46 @@
             background: #115e59;
             outline-offset: 3px;
         }
+
+        /* Direcional virtual: só aparece em telas de toque. */
+        #controles-mobile {
+            display: none;
+            position: absolute;
+            left: 12px;
+            bottom: 68px;
+            z-index: 6;
+            grid-template-columns: repeat(3, 48px);
+            grid-template-rows: repeat(2, 48px);
+            gap: 4px;
+            touch-action: none;
+            user-select: none;
+        }
+        .controle-seta {
+            border: 2px solid #5eead4;
+            border-radius: 10px;
+            background: rgba(3, 45, 65, 0.85);
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+            touch-action: none;
+            cursor: pointer;
+        }
+        .controle-seta:active { background: #0f766e; }
+        .controle-cima { grid-column: 2; grid-row: 1; }
+        .controle-esquerda { grid-column: 1; grid-row: 2; }
+        .controle-baixo { grid-column: 2; grid-row: 2; }
+        .controle-direita { grid-column: 3; grid-row: 2; }
+        @media (pointer: coarse) {
+            #controles-mobile { display: grid; }
+            #oceano { height: min(500px, 57svh); min-height: 310px; }
+            #merlin { width: 95px; }
+            #imagem-merlin { width: 95px; }
+            #habitat-peixe { width: min(41%, 260px); }
+            #reiniciar-jogo { padding: 7px 10px; font-size: 12px; }
+            #painel-descoberta { width: 90%; padding: 10px; font-size: 13px; }
+            #painel-descoberta h2 { font-size: 17px; }
+            #painel-descoberta h3 { font-size: 15px; }
+        }
     </style>
 </head>
 
@@ -189,6 +230,12 @@
 
     <div id="oceano">
         <button id="reiniciar-jogo" type="button">↻ Reiniciar jogo</button>
+        <div id="controles-mobile" aria-label="Controles de movimento da Merlin">
+            <button class="controle-seta controle-cima" data-direcao="ArrowUp" type="button" aria-label="Nadar para cima">▲</button>
+            <button class="controle-seta controle-esquerda" data-direcao="ArrowLeft" type="button" aria-label="Nadar para esquerda">◀</button>
+            <button class="controle-seta controle-baixo" data-direcao="ArrowDown" type="button" aria-label="Nadar para baixo">▼</button>
+            <button class="controle-seta controle-direita" data-direcao="ArrowRight" type="button" aria-label="Nadar para direita">▶</button>
+        </div>
 
         <div class="areia"></div>
 
@@ -317,40 +364,45 @@
         atualizarContador();
     });
 
-    // Detecta quando apertamos uma tecla
-    document.addEventListener("keydown", function(evento) {
+    // Mesma movimentação para teclado e controles de toque.
+    function moverMerlin(direcao) {
+        if (direcao === "ArrowRight") posicaoX += velocidade;
+        else if (direcao === "ArrowLeft") posicaoX -= velocidade;
+        else if (direcao === "ArrowUp") posicaoY -= velocidade;
+        else if (direcao === "ArrowDown") posicaoY += velocidade;
+        else return;
 
-        if (evento.key === "ArrowRight") {
-            posicaoX += velocidade;
-        }
-
-        if (evento.key === "ArrowLeft") {
-            posicaoX -= velocidade;
-        }
-
-        if (evento.key === "ArrowUp") {
-            posicaoY -= velocidade;
-        }
-
-        if (evento.key === "ArrowDown") {
-            posicaoY += velocidade;
-        }
-
-        // Impede Merlin de sair do oceano
-        const limiteX = oceano.clientWidth - merlin.offsetWidth;
-        const limiteY = oceano.clientHeight - merlin.offsetHeight;
-
-        posicaoX = Math.max(0, Math.min(posicaoX, limiteX));
-        posicaoY = Math.max(0, Math.min(posicaoY, limiteY));
-
-        // Atualiza a posição na tela
+        posicaoX = Math.max(0, Math.min(posicaoX, Math.max(0, oceano.clientWidth - merlin.offsetWidth)));
+        posicaoY = Math.max(0, Math.min(posicaoY, Math.max(0, oceano.clientHeight - merlin.offsetHeight)));
         merlin.style.left = posicaoX + "px";
         merlin.style.top = posicaoY + "px";
-
         verificarDescoberta();
+    }
 
-        // Impede as setas de rolarem a página
-        evento.preventDefault();
+    document.addEventListener("keydown", function(evento) {
+        if (["ArrowRight", "ArrowLeft", "ArrowUp", "ArrowDown"].includes(evento.key)) {
+            evento.preventDefault();
+            moverMerlin(evento.key);
+        }
+    });
+
+    // Um toque move uma vez; segurar a seta faz a Merlin continuar nadando.
+    document.querySelectorAll(".controle-seta").forEach(function(botao) {
+        let repeticao = null;
+        function parar() {
+            if (repeticao !== null) clearInterval(repeticao);
+            repeticao = null;
+        }
+        botao.addEventListener("pointerdown", function(evento) {
+            evento.preventDefault();
+            parar();
+            moverMerlin(botao.dataset.direcao);
+            repeticao = setInterval(function() { moverMerlin(botao.dataset.direcao); }, 110);
+            if (botao.setPointerCapture) botao.setPointerCapture(evento.pointerId);
+        });
+        botao.addEventListener("pointerup", parar);
+        botao.addEventListener("pointercancel", parar);
+        botao.addEventListener("lostpointercapture", parar);
     });
 
 </script>
