@@ -87,7 +87,7 @@
             height: 64px;
             z-index: 2;
             pointer-events: none;
-            animation: nadar-peixe-palhaco 9s ease-in-out infinite alternate;
+            /* Permanece parado até a Merlin se aproximar. */
         }
 
         #peixe-palhaco svg {
@@ -97,16 +97,20 @@
             filter: drop-shadow(3px 4px 0 rgba(0, 33, 54, .25));
         }
 
-        @keyframes nadar-peixe-palhaco {
-            from { transform: translateX(-45px) translateY(10px) scaleX(1); }
-            49% { transform: translateX(40px) translateY(-8px) scaleX(1); }
-            50% { transform: translateX(40px) translateY(-8px) scaleX(-1); }
-            to { transform: translateX(-45px) translateY(10px) scaleX(-1); }
+        #painel-descoberta {
+            display: none;
+            margin: 12px auto;
+            padding: 16px;
+            max-width: 600px;
+            border: 2px solid #5eead4;
+            border-radius: 10px;
+            background: #075073;
+            color: white;
         }
 
-        @media (prefers-reduced-motion: reduce) {
-            #peixe-palhaco { animation: none; }
-        }
+        #painel-descoberta.visivel { display: block; }
+        #painel-descoberta h2 { margin: 0 0 8px; color: #fef08a; }
+        #contador-especies { font-weight: bold; color: #5eead4; }
     </style>
 </head>
 
@@ -124,7 +128,7 @@
         <div class="areia"></div>
 
         <!-- Peixe-palhaço: desenho vetorial com formas quadradas em estilo pixel art -->
-        <div id="peixe-palhaco" role="img" aria-label="Peixe-palhaço laranja com listras brancas nadando">
+        <div id="peixe-palhaco" role="img" aria-label="Peixe-palhaço laranja com listras brancas">
             <svg viewBox="0 0 96 64" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges" aria-hidden="true">
                 <!-- cauda e nadadeiras -->
                 <path d="M19 26 H10 V19 H2 V45 H10 V38 H19 Z" fill="#f97316" stroke="#753613" stroke-width="3"/>
@@ -153,6 +157,15 @@
 
     </div>
 
+    <p id="contador-especies" aria-live="polite">Espécies descobertas: 0/1</p>
+
+    <section id="painel-descoberta" aria-live="polite" aria-label="Informações da espécie descoberta">
+        <h2>🎉 Nova espécie descoberta!</h2>
+        <h3>Peixe-palhaço</h3>
+        <p><strong>Nome científico:</strong> <em>Amphiprion ocellaris</em></p>
+        <p>🐠 Curiosidade: o peixe-palhaço vive entre os tentáculos de anêmonas-do-mar. Ele recebe proteção, enquanto ajuda a anêmona, por exemplo, afastando alguns predadores.</p>
+    </section>
+
     <p>
         Nossa primeira aventura está começando...
     </p>
@@ -168,6 +181,47 @@
 
     // Quantos pixels ela nada a cada movimento
     const velocidade = 15;
+
+    // Guardamos a descoberta para que ela não seja repetida ao atualizar a página.
+    const peixePalhaco = document.getElementById("peixe-palhaco");
+    const contadorEspecies = document.getElementById("contador-especies");
+    const painelDescoberta = document.getElementById("painel-descoberta");
+    const chaveDescoberta = "merlin-especie-peixe-palhaco-v1";
+    let peixeDescoberto = false;
+
+    try {
+        peixeDescoberto = localStorage.getItem(chaveDescoberta) === "sim";
+    } catch (erro) {
+        // O jogo continua funcionando mesmo quando o navegador bloqueia o armazenamento.
+    }
+
+    function atualizarContador() {
+        contadorEspecies.textContent = "Espécies descobertas: " + (peixeDescoberto ? 1 : 0) + "/1";
+    }
+
+    function verificarDescoberta() {
+        if (peixeDescoberto) return;
+
+        // Distância entre os centros da tartaruga e do peixe no cenário.
+        const centroMerlinX = merlin.offsetLeft + merlin.offsetWidth / 2;
+        const centroMerlinY = merlin.offsetTop + merlin.offsetHeight / 2;
+        const centroPeixeX = peixePalhaco.offsetLeft + peixePalhaco.offsetWidth / 2;
+        const centroPeixeY = peixePalhaco.offsetTop + peixePalhaco.offsetHeight / 2;
+        const distancia = Math.hypot(centroMerlinX - centroPeixeX, centroMerlinY - centroPeixeY);
+
+        if (distancia <= 105) {
+            peixeDescoberto = true;
+            atualizarContador();
+            painelDescoberta.classList.add("visivel");
+            try {
+                localStorage.setItem(chaveDescoberta, "sim");
+            } catch (erro) {
+                // A descoberta permanece válida durante a sessão atual.
+            }
+        }
+    }
+
+    atualizarContador();
 
     // Detecta quando apertamos uma tecla
     document.addEventListener("keydown", function(evento) {
@@ -198,6 +252,8 @@
         // Atualiza a posição na tela
         merlin.style.left = posicaoX + "px";
         merlin.style.top = posicaoY + "px";
+
+        verificarDescoberta();
 
         // Impede as setas de rolarem a página
         evento.preventDefault();
