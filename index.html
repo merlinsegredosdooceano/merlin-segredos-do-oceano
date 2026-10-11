@@ -131,6 +131,21 @@
         #painel-descoberta.visivel { display: block; }
         #painel-descoberta h2 { margin: 0 0 8px; color: #fef08a; }
         #contador-especies { font-weight: bold; color: #5eead4; }
+        #reiniciar-jogo {
+            margin: 4px auto 16px;
+            padding: 10px 18px;
+            background: #0f766e;
+            color: white;
+            border: 2px solid #5eead4;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        #reiniciar-jogo:hover, #reiniciar-jogo:focus-visible {
+            background: #115e59;
+            outline-offset: 3px;
+        }
     </style>
 </head>
 
@@ -200,6 +215,7 @@
     </div>
 
     <p id="contador-especies" aria-live="polite">Espécies descobertas: 0/1</p>
+    <button id="reiniciar-jogo" type="button">↻ Reiniciar jogo</button>
 
     <section id="painel-descoberta" aria-live="polite" aria-label="Informações da espécie descoberta">
         <h2>🎉 Missão 1 concluída! Nova espécie descoberta!</h2>
@@ -266,6 +282,24 @@
     }
 
     atualizarContador();
+
+    // Reinicia a primeira missão e apaga apenas o progresso deste jogo.
+    document.getElementById("reiniciar-jogo").addEventListener("click", function() {
+        if (!window.confirm("Reiniciar o jogo e apagar suas descobertas?")) return;
+        peixeDescoberto = false;
+        try {
+            localStorage.removeItem(chaveDescoberta);
+        } catch (erro) {
+            // O reinício desta sessão funciona mesmo sem armazenamento.
+        }
+        posicaoX = 100;
+        posicaoY = 200;
+        merlin.style.left = posicaoX + "px";
+        merlin.style.top = posicaoY + "px";
+        painelDescoberta.classList.remove("visivel");
+        missaoAtual.innerHTML = "<strong>Missão 1 — Descubra o peixe-palhaço:</strong> explore o oceano com as setas e aproxime a Merlin do recife de corais.";
+        atualizarContador();
+    });
 
     // Detecta quando apertamos uma tecla
     document.addEventListener("keydown", function(evento) {
