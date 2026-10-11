@@ -77,6 +77,36 @@
 
             background: #d6b56d;
         }
+
+        /* Peixe-palhaço em pixel art, independente dos controles da Merlin */
+        #peixe-palhaco {
+            position: absolute;
+            left: 58%;
+            top: 35%;
+            width: 96px;
+            height: 64px;
+            z-index: 2;
+            pointer-events: none;
+            animation: nadar-peixe-palhaco 9s ease-in-out infinite alternate;
+        }
+
+        #peixe-palhaco svg {
+            width: 100%;
+            height: 100%;
+            image-rendering: pixelated;
+            filter: drop-shadow(3px 4px 0 rgba(0, 33, 54, .25));
+        }
+
+        @keyframes nadar-peixe-palhaco {
+            from { transform: translateX(-45px) translateY(10px) scaleX(1); }
+            49% { transform: translateX(40px) translateY(-8px) scaleX(1); }
+            50% { transform: translateX(40px) translateY(-8px) scaleX(-1); }
+            to { transform: translateX(-45px) translateY(10px) scaleX(-1); }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            #peixe-palhaco { animation: none; }
+        }
     </style>
 </head>
 
@@ -92,6 +122,29 @@
     <div id="oceano">
 
         <div class="areia"></div>
+
+        <!-- Peixe-palhaço: desenho vetorial com formas quadradas em estilo pixel art -->
+        <div id="peixe-palhaco" role="img" aria-label="Peixe-palhaço laranja com listras brancas nadando">
+            <svg viewBox="0 0 96 64" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges" aria-hidden="true">
+                <!-- cauda e nadadeiras -->
+                <path d="M19 26 H10 V19 H2 V45 H10 V38 H19 Z" fill="#f97316" stroke="#753613" stroke-width="3"/>
+                <path d="M37 19 V9 H48 V5 H59 V16 H70 V23 Z" fill="#fb923c" stroke="#753613" stroke-width="3"/>
+                <path d="M41 45 V54 H53 V59 H65 V46 Z" fill="#f97316" stroke="#753613" stroke-width="3"/>
+                <!-- corpo -->
+                <path d="M15 25 H23 V18 H36 V13 H62 V18 H76 V24 H85 V31 H91 V39 H84 V45 H74 V50 H36 V46 H23 V40 H15 Z"
+                      fill="#f97316" stroke="#753613" stroke-width="3"/>
+                <!-- faixas brancas com contornos escuros -->
+                <path d="M34 15 H44 V19 H48 V44 H43 V48 H34 V44 H30 V20 H34 Z"
+                      fill="#fff7ed" stroke="#753613" stroke-width="2"/>
+                <path d="M65 18 H73 V22 H77 V45 H70 V49 H63 V44 H66 V23 H65 Z"
+                      fill="#fff7ed" stroke="#753613" stroke-width="2"/>
+                <!-- olho e brilho -->
+                <rect x="80" y="28" width="7" height="7" fill="#1f2937"/>
+                <rect x="81" y="29" width="2" height="2" fill="#ffffff"/>
+                <rect x="88" y="39" width="5" height="2" fill="#753613"/>
+            </svg>
+        </div>
+
 
         <div id="merlin">
     <img src="merlin.png" id="imagem-merlin">
