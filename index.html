@@ -214,6 +214,24 @@
             #painel-descoberta h2 { font-size: 17px; }
             #painel-descoberta h3 { font-size: 15px; }
         }
+
+        /* Mundo horizontal explorável com câmera lateral. */
+        #mundo { position:absolute; inset:0 auto 0 0; width:2700px; height:100%; transform:translateX(0); will-change:transform; }
+        #mundo .areia { width:100%; }
+        #mundo #habitat-peixe { left:590px; right:auto; width:305px; }
+        .habitat-novo { position:absolute; bottom:35px; width:250px; height:245px; pointer-events:none; z-index:2; }
+        #habitat-cavalo { left:1460px; }
+        #habitat-agua-viva { left:2290px; bottom:66px; }
+        .habitat-novo svg { width:100%; height:100%; image-rendering:pixelated; shape-rendering:crispEdges; filter:drop-shadow(4px 5px 0 rgba(0,30,48,.25)); }
+        .habitat-novo .alvo-especie { position:absolute; width:40%; height:43%; left:34%; top:15%; }
+        #habitat-agua-viva .alvo-especie { left:30%; top:13%; }
+        .detalhe-oceano { position:absolute; bottom:53px; width:110px; height:120px; opacity:.65; pointer-events:none; }
+        .detalhe-oceano svg { width:100%; height:100%; shape-rendering:crispEdges; }
+        #abrir-descoberta { max-width:55%; }
+        @media (pointer:coarse) {
+            #mundo #habitat-peixe { width:225px; }
+            .habitat-novo { width:205px; height:200px; }
+        }
     </style>
 </head>
 
@@ -237,6 +255,7 @@
             <button class="controle-seta controle-direita" data-direcao="ArrowRight" type="button" aria-label="Nadar para direita">▶</button>
         </div>
 
+        <div id="mundo">
         <div class="areia"></div>
 
         <!-- Primeira missão: habitat ilustrado com peixe-palhaço e anêmona. -->
@@ -245,10 +264,51 @@
             <div id="peixe-palhaco" aria-hidden="true"></div>
         </div>
 
+
+        <!-- Região 2: cavalo-marinho entre algas e rochas, arte pixelada vetorial. -->
+        <div id="habitat-cavalo" class="habitat-novo" role="img" aria-label="Cavalo-marinho amarelo em floresta de algas">
+            <svg viewBox="0 0 250 245" xmlns="http://www.w3.org/2000/svg">
+                <path d="M0 218 H250 V245 H0 Z" fill="#d6b56d"/>
+                <path d="M10 225 V116 H25 V92 H37 V142 H30 V225 Z M195 225 V93 H210 V67 H222 V120 H215 V225 Z" fill="#16866e" stroke="#064e44" stroke-width="5"/>
+                <path d="M49 225 V159 H61 V120 H74 V162 H66 V225 Z M168 225 V147 H181 V105 H195 V158 H185 V225 Z" fill="#3ec9a0" stroke="#136b65" stroke-width="4"/>
+                <path d="M75 225 H106 V205 H134 V225 H176 V241 H75 Z" fill="#536e84" stroke="#29485f" stroke-width="4"/>
+                <!-- Cavalo-marinho com focinho alongado, crista e cauda enrolada -->
+                <path d="M126 54 H149 V65 H164 V75 H185 V87 H161 V99 H153 V119 H146 V145 H154 V157 H164 V175 H158 V190 H143 V198 H125 V187 H122 V175 H137 V166 H142 V155 H123 V144 H116 V128 H112 V110 H102 V93 H111 V71 H126 Z" fill="#f4bb39" stroke="#7d4b19" stroke-width="5"/>
+                <path d="M125 59 H132 V46 H140 V60 H149 V52 H157 V67 H143 V73 H124 Z" fill="#ffde78" stroke="#8d5726" stroke-width="3"/>
+                <path d="M119 91 H108 V112 H122 V126 H130 V147 H140 V139 H132 V116 H125 V96 Z" fill="#ffe48e"/>
+                <path d="M147 163 H158 V175 H149 V183 H139 V175" fill="none" stroke="#ffe48e" stroke-width="5"/>
+                <rect x="145" y="77" width="7" height="8" fill="#17304a"/><rect x="146" y="78" width="2" height="2" fill="white"/>
+                <path d="M121 103 L91 113 L118 127 Z" fill="#fba63c" stroke="#99511f" stroke-width="3"/>
+                <path d="M84 220 H102 V208 H113 V222 H133 V238 H84 Z" fill="#e878a7" stroke="#963b75" stroke-width="3"/>
+                <rect x="49" y="227" width="18" height="7" fill="#8babb1"/>
+            </svg>
+            <div class="alvo-especie" aria-hidden="true"></div>
+        </div>
+        <!-- Região 3: água-viva entre rochas, corais roxos e plantas. -->
+        <div id="habitat-agua-viva" class="habitat-novo" role="img" aria-label="Água-viva azul e lilás no oceano">
+            <svg viewBox="0 0 250 245" xmlns="http://www.w3.org/2000/svg">
+                <path d="M0 218 H250 V245 H0 Z" fill="#d6b56d"/>
+                <path d="M14 225 V168 H31 V149 H44 V181 H38 V225 Z M196 225 V149 H207 V128 H221 V167 H215 V225 Z" fill="#1c9d82" stroke="#0d655a" stroke-width="5"/>
+                <path d="M50 237 H83 V213 H101 V224 H124 V241 H50 Z M159 240 H202 V218 H225 V240 Z" fill="#607b90" stroke="#29465e" stroke-width="4"/>
+                <path d="M68 225 V183 H56 V164 H68 V172 H81 V147 H94 V179 H105 V159 H118 V191 H96 V229 Z" fill="#d38df8" stroke="#773bb0" stroke-width="4"/>
+                <!-- Tentáculos ficam sobre o coral e abaixo da cúpula -->
+                <path d="M106 118 V165 H116 V182 H108 V199 M127 121 V176 H138 V196 H129 V209 M148 119 V164 H156 V185 H147 V201" fill="none" stroke="#cfa9ff" stroke-width="8" stroke-linejoin="miter"/>
+                <path d="M109 73 H121 V61 H148 V68 H160 V80 H171 V97 H177 V121 H165 V133 H105 V125 H95 V99 H101 V82 H109 Z" fill="#a478eb" stroke="#603b9d" stroke-width="5"/>
+                <path d="M114 76 H147 V82 H161 V98 H166 V110 H109 V96 H114 Z" fill="#e1c5ff"/>
+                <rect x="119" y="108" width="7" height="8" fill="#263e75"/>
+                <rect x="150" y="108" width="7" height="8" fill="#263e75"/>
+                <path d="M132 119 H143 V124 H132 Z" fill="#7848ac"/>
+                <rect x="184" y="68" width="8" height="8" fill="#87d9ed"/><rect x="192" y="42" width="5" height="5" fill="#9beaf2"/>
+            </svg>
+            <div class="alvo-especie" aria-hidden="true"></div>
+        </div>
+
         <div id="merlin">
     <img src="merlin.png" id="imagem-merlin">
     <div id="nome">Merlin</div>
 </div>
+
+        </div><!-- fim do mundo explorável -->
 
         <section id="painel-descoberta" aria-live="polite" aria-label="Informações da espécie descoberta">
         <h2>🎉 Missão 1 concluída! Nova espécie descoberta!</h2>
@@ -268,142 +328,134 @@
     </p>
     <script>
 
-    // Pegamos a Merlin e o oceano
-    const merlin = document.getElementById("merlin");
+
     const oceano = document.getElementById("oceano");
-
-    // Posição inicial da Merlin
-    let posicaoX = 100;
-    let posicaoY = 200;
-
-    // Quantos pixels ela nada a cada movimento
-    const velocidade = 15;
-
-    // Guardamos a descoberta para que ela não seja repetida ao atualizar a página.
-    const peixePalhaco = document.getElementById("peixe-palhaco");
+    const mundo = document.getElementById("mundo");
+    const merlin = document.getElementById("merlin");
+    const painelDescoberta = document.getElementById("painel-descoberta");
     const contadorEspecies = document.getElementById("contador-especies");
     const missaoAtual = document.getElementById("missao-atual");
-    const painelDescoberta = document.getElementById("painel-descoberta");
-    const botaoAbrirDescoberta = document.getElementById("abrir-descoberta");
+    const botaoAbrir = document.getElementById("abrir-descoberta");
+    const chaveAntiga = "merlin-especie-peixe-palhaco-v1";
+    const prefixo = "merlin-especie-";
+    const velocidade = 15;
+    const inicioX = 100, inicioY = 200;
+    let posicaoX = inicioX, posicaoY = inicioY;
     let temporizadorDescoberta;
+    let especieAberta = null;
 
+    const especies = [
+        {id:"peixe-palhaco", nome:"Peixe-palhaço", cientifico:"Amphiprion ocellaris",
+         curiosidade:"O peixe-palhaço vive entre os tentáculos de anêmonas-do-mar, que oferecem proteção. Em troca, ele pode ajudar a afastar predadores.",
+         habitat:"habitat-peixe", alvo:"peixe-palhaco"},
+        {id:"cavalo-marinho", nome:"Cavalo-marinho", cientifico:"Hippocampus reidi",
+         curiosidade:"No cavalo-marinho, é o macho que carrega os ovos em uma bolsa até o nascimento dos filhotes!",
+         habitat:"habitat-cavalo", alvo:null},
+        {id:"agua-viva", nome:"Água-viva", cientifico:"Aurelia aurita",
+         curiosidade:"As águas-vivas não têm cérebro nem coração. Elas usam pulsos de seu corpo gelatinoso para se deslocar pela água.",
+         habitat:"habitat-agua-viva", alvo:null}
+    ];
+    const descobertas = new Set();
+    function armazenar(chave, valor) { try { if (valor) localStorage.setItem(chave,"sim"); else localStorage.removeItem(chave); } catch(e){} }
+    function existe(chave) { try { return localStorage.getItem(chave)==="sim"; } catch(e) {return false;} }
+    especies.forEach(e => { if(existe(prefixo+e.id) || (e.id==="peixe-palhaco" && existe(chaveAntiga))) descobertas.add(e.id); });
+
+    function atualizarPainel() {
+        contadorEspecies.textContent = "Espécies descobertas: "+descobertas.size+"/3";
+        const proxima = especies.find(e => !descobertas.has(e.id));
+        missaoAtual.textContent = proxima
+            ? "Missão "+(especies.indexOf(proxima)+1)+" — Descubra "+proxima.nome+": continue explorando o oceano!"
+            : "✅ Todas as 3 espécies foram descobertas! Explore livremente o oceano.";
+        botaoAbrir.classList.toggle("visivel", descobertas.size>0 && !painelDescoberta.classList.contains("visivel"));
+    }
     function minimizarDescoberta() {
         clearTimeout(temporizadorDescoberta);
         painelDescoberta.classList.remove("visivel");
-        if (peixeDescoberto) botaoAbrirDescoberta.classList.add("visivel");
+        atualizarPainel();
     }
-
-    function mostrarDescoberta() {
+    function mostrarDescoberta(e) {
+        especieAberta=e;
         clearTimeout(temporizadorDescoberta);
-        botaoAbrirDescoberta.classList.remove("visivel");
+        painelDescoberta.querySelector("h2").textContent = "🎉 Missão concluída! Nova espécie descoberta!";
+        painelDescoberta.querySelector("h3").textContent = e.nome;
+        painelDescoberta.querySelectorAll("p")[0].innerHTML = "<strong>Nome científico:</strong> <em>"+e.cientifico+"</em>";
+        painelDescoberta.querySelectorAll("p")[1].textContent = "🐠 Curiosidade: "+e.curiosidade;
         painelDescoberta.classList.add("visivel");
-        // A leitura fica disponível novamente pelo botão minimizado.
-        temporizadorDescoberta = setTimeout(minimizarDescoberta, 10000);
+        botaoAbrir.classList.remove("visivel");
+        temporizadorDescoberta=setTimeout(minimizarDescoberta,10000);
     }
+    document.getElementById("minimizar-descoberta").addEventListener("click",minimizarDescoberta);
+    botaoAbrir.addEventListener("click",function() {
+        const e = especieAberta || especies.slice().reverse().find(e=>descobertas.has(e.id));
+        if(e) mostrarDescoberta(e);
+    });
 
-    document.getElementById("minimizar-descoberta").addEventListener("click", minimizarDescoberta);
-    botaoAbrirDescoberta.addEventListener("click", mostrarDescoberta);
-
-    const chaveDescoberta = "merlin-especie-peixe-palhaco-v1";
-    let peixeDescoberto = false;
-
-    try {
-        peixeDescoberto = localStorage.getItem(chaveDescoberta) === "sim";
-    } catch (erro) {
-        // O jogo continua funcionando mesmo quando o navegador bloqueia o armazenamento.
+    function centroAlvo(e) {
+        const habitat = document.getElementById(e.habitat);
+        const alvo = e.alvo ? document.getElementById(e.alvo) : habitat.querySelector(".alvo-especie");
+        return {x:habitat.offsetLeft+alvo.offsetLeft+alvo.offsetWidth/2,
+                y:habitat.offsetTop+alvo.offsetTop+alvo.offsetHeight/2};
     }
-
-    function atualizarContador() {
-        contadorEspecies.textContent = "Espécies descobertas: " + (peixeDescoberto ? 1 : 0) + "/1";
-        if (peixeDescoberto) missaoAtual.textContent = "✅ Missão 1 concluída — peixe-palhaço descoberto!";
-    }
-
     function verificarDescoberta() {
-        if (peixeDescoberto) return;
-
-        // Distância entre os centros da tartaruga e do peixe no cenário.
-        const centroMerlinX = merlin.offsetLeft + merlin.offsetWidth / 2;
-        const centroMerlinY = merlin.offsetTop + merlin.offsetHeight / 2;
-        const habitat = document.getElementById("habitat-peixe");
-        const centroPeixeX = habitat.offsetLeft + peixePalhaco.offsetLeft + peixePalhaco.offsetWidth / 2;
-        const centroPeixeY = habitat.offsetTop + peixePalhaco.offsetTop + peixePalhaco.offsetHeight / 2;
-        const distancia = Math.hypot(centroMerlinX - centroPeixeX, centroMerlinY - centroPeixeY);
-
-        if (distancia <= 105) {
-            peixeDescoberto = true;
-            atualizarContador();
-            mostrarDescoberta();
-            try {
-                localStorage.setItem(chaveDescoberta, "sim");
-            } catch (erro) {
-                // A descoberta permanece válida durante a sessão atual.
+        for (const e of especies) {
+            if(descobertas.has(e.id)) continue;
+            const alvo=centroAlvo(e);
+            if(Math.hypot(posicaoX+merlin.offsetWidth/2-alvo.x,posicaoY+merlin.offsetHeight/2-alvo.y)<=105) {
+                descobertas.add(e.id);
+                armazenar(prefixo+e.id,true);
+                if(e.id==="peixe-palhaco") armazenar(chaveAntiga,true);
+                atualizarPainel();
+                mostrarDescoberta(e);
+                break;
             }
         }
     }
-
-    atualizarContador();
-    if (peixeDescoberto) botaoAbrirDescoberta.classList.add("visivel");
-
-    // Reinicia a primeira missão e apaga apenas o progresso deste jogo.
-    document.getElementById("reiniciar-jogo").addEventListener("click", function() {
-        if (!window.confirm("Reiniciar o jogo e apagar suas descobertas?")) return;
-        peixeDescoberto = false;
-        try {
-            localStorage.removeItem(chaveDescoberta);
-        } catch (erro) {
-            // O reinício desta sessão funciona mesmo sem armazenamento.
+    function renderizar() {
+        const limiteX=mundo.offsetWidth-merlin.offsetWidth;
+        posicaoX=Math.max(0,Math.min(posicaoX,limiteX));
+        posicaoY=Math.max(0,Math.min(posicaoY,oceano.clientHeight-merlin.offsetHeight));
+        merlin.style.left=posicaoX+"px";
+        merlin.style.top=posicaoY+"px";
+        const cameraX=Math.max(0,Math.min(posicaoX+merlin.offsetWidth/2-oceano.clientWidth*.42,mundo.offsetWidth-oceano.clientWidth));
+        mundo.style.transform="translateX("+(-cameraX)+"px)";
+    }
+    function moverMerlin(direcao) {
+        if(direcao==="ArrowRight")posicaoX+=velocidade;
+        else if(direcao==="ArrowLeft")posicaoX-=velocidade;
+        else if(direcao==="ArrowUp")posicaoY-=velocidade;
+        else if(direcao==="ArrowDown")posicaoY+=velocidade;
+        else return;
+        renderizar(); verificarDescoberta();
+    }
+    document.addEventListener("keydown",function(ev) {
+        if(["ArrowRight","ArrowLeft","ArrowUp","ArrowDown"].includes(ev.key)) {
+            ev.preventDefault();moverMerlin(ev.key);
         }
-        posicaoX = 100;
-        posicaoY = 200;
-        merlin.style.left = posicaoX + "px";
-        merlin.style.top = posicaoY + "px";
+    });
+    document.querySelectorAll(".controle-seta").forEach(function(botao) {
+        let repeticao=null;
+        function parar(){if(repeticao!==null)clearInterval(repeticao);repeticao=null;}
+        botao.addEventListener("pointerdown",function(ev) {
+            ev.preventDefault();parar();moverMerlin(botao.dataset.direcao);
+            repeticao=setInterval(()=>moverMerlin(botao.dataset.direcao),110);
+            if(botao.setPointerCapture)botao.setPointerCapture(ev.pointerId);
+        });
+        botao.addEventListener("pointerup",parar);
+        botao.addEventListener("pointercancel",parar);
+        botao.addEventListener("lostpointercapture",parar);
+    });
+    document.getElementById("reiniciar-jogo").addEventListener("click",function() {
+        if(!confirm("Reiniciar o jogo e apagar suas descobertas?"))return;
+        especies.forEach(e=>armazenar(prefixo+e.id,false));
+        armazenar(chaveAntiga,false);
+        descobertas.clear();especieAberta=null;
         clearTimeout(temporizadorDescoberta);
         painelDescoberta.classList.remove("visivel");
-        botaoAbrirDescoberta.classList.remove("visivel");
-        missaoAtual.innerHTML = "<strong>Missão 1 — Descubra o peixe-palhaço:</strong> explore o oceano com as setas e aproxime a Merlin do recife de corais.";
-        atualizarContador();
+        posicaoX=inicioX;posicaoY=inicioY;
+        renderizar();atualizarPainel();
     });
-
-    // Mesma movimentação para teclado e controles de toque.
-    function moverMerlin(direcao) {
-        if (direcao === "ArrowRight") posicaoX += velocidade;
-        else if (direcao === "ArrowLeft") posicaoX -= velocidade;
-        else if (direcao === "ArrowUp") posicaoY -= velocidade;
-        else if (direcao === "ArrowDown") posicaoY += velocidade;
-        else return;
-
-        posicaoX = Math.max(0, Math.min(posicaoX, Math.max(0, oceano.clientWidth - merlin.offsetWidth)));
-        posicaoY = Math.max(0, Math.min(posicaoY, Math.max(0, oceano.clientHeight - merlin.offsetHeight)));
-        merlin.style.left = posicaoX + "px";
-        merlin.style.top = posicaoY + "px";
-        verificarDescoberta();
-    }
-
-    document.addEventListener("keydown", function(evento) {
-        if (["ArrowRight", "ArrowLeft", "ArrowUp", "ArrowDown"].includes(evento.key)) {
-            evento.preventDefault();
-            moverMerlin(evento.key);
-        }
-    });
-
-    // Um toque move uma vez; segurar a seta faz a Merlin continuar nadando.
-    document.querySelectorAll(".controle-seta").forEach(function(botao) {
-        let repeticao = null;
-        function parar() {
-            if (repeticao !== null) clearInterval(repeticao);
-            repeticao = null;
-        }
-        botao.addEventListener("pointerdown", function(evento) {
-            evento.preventDefault();
-            parar();
-            moverMerlin(botao.dataset.direcao);
-            repeticao = setInterval(function() { moverMerlin(botao.dataset.direcao); }, 110);
-            if (botao.setPointerCapture) botao.setPointerCapture(evento.pointerId);
-        });
-        botao.addEventListener("pointerup", parar);
-        botao.addEventListener("pointercancel", parar);
-        botao.addEventListener("lostpointercapture", parar);
-    });
+    window.addEventListener("resize",renderizar);
+    atualizarPainel();renderizar();
 
 </script>
 
