@@ -229,7 +229,22 @@
 
         /* Mundo horizontal explorável com câmera lateral. */
         #mundo { position:absolute; inset:0 auto 0 0; width:2700px; height:100%; transform:translateX(0); will-change:transform; }
-        #mundo .areia { width:100%; }
+        /* Paisagem fixa no mundo: acompanha a câmera sem cobrir os personagens. */
+        #mundo::before, #mundo::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 50%;
+            z-index: -1;
+            pointer-events: none;
+            background: #075985 url("cenario-oceano.png") center bottom / 100% 100% no-repeat;
+            image-rendering: pixelated;
+        }
+        #mundo::before { left: 0; }
+        /* A metade espelhada mantém a paisagem contínua no centro do mundo. */
+        #mundo::after { right: 0; transform: scaleX(-1); }
+        #mundo .areia { width:100%; background:transparent; }
         #mundo #habitat-peixe { left:590px; right:auto; width:305px; }
         .habitat-novo { position:absolute; bottom:35px; width:250px; height:245px; pointer-events:none; z-index:2; }
         #habitat-cavalo { left:1460px; }
