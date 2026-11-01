@@ -392,33 +392,72 @@
         const cameraX=Math.max(0,Math.min(posicaoX+merlin.offsetWidth/2-oceano.clientWidth*.42,mundo.offsetWidth-oceano.clientWidth));
         mundo.style.transform="translateX("+(-cameraX)+"px)";
     }
-    function moverMerlin(direcao) {
-        if(direcao==="ArrowRight")posicaoX+=velocidade;
-        else if(direcao==="ArrowLeft")posicaoX-=velocidade;
-        else if(direcao==="ArrowUp")posicaoY-=velocidade;
-        else if(direcao==="ArrowDown")posicaoY+=velocidade;
-        else return;
-        renderizar(); verificarDescoberta();
+    // Teclado e toque compartilham um único movimento contínuo.
+    const direcoes = ["ArrowRight","ArrowLeft","ArrowUp","ArrowDown"];
+    const entradasMovimento = new Map();
+    let quadroMovimento = null;
+    let ultimoMovimento = 0;
+    function pararMovimento() {
+        entradasMovimento.clear();
+        if(quadroMovimento!==null)cancelAnimationFrame(quadroMovimento);
+        quadroMovimento=null;
+    }
+    function moverMerlin(agora) {
+        quadroMovimento=null;
+        const ativas = new Set(entradasMovimento.values());
+        const dx = Number(ativas.has("ArrowRight"))-Number(ativas.has("ArrowLeft"));
+        const dy = Number(ativas.has("ArrowDown"))-Number(ativas.has("ArrowUp"));
+        const intervalo = Math.min(agora-ultimoMovimento,50);
+        ultimoMovimento=agora;
+        if(dx || dy) {
+            const passo = velocidade*intervalo/110/Math.hypot(dx,dy);
+            posicaoX+=dx*passo;
+            posicaoY+=dy*passo;
+            renderizar(); verificarDescoberta();
+        }
+        if(entradasMovimento.size)quadroMovimento=requestAnimationFrame(moverMerlin);
+    }
+    function iniciarMovimento(origem,direcao) {
+        entradasMovimento.set(origem,direcao);
+        if(quadroMovimento===null) {
+            ultimoMovimento=performance.now();
+            quadroMovimento=requestAnimationFrame(moverMerlin);
+        }
+    }
+    function soltarMovimento(origem) {
+        entradasMovimento.delete(origem);
+        if(!entradasMovimento.size)pararMovimento();
     }
     document.addEventListener("keydown",function(ev) {
-        if(["ArrowRight","ArrowLeft","ArrowUp","ArrowDown"].includes(ev.key)) {
-            ev.preventDefault();moverMerlin(ev.key);
+        if(direcoes.includes(ev.key)) {
+            ev.preventDefault();
+            iniciarMovimento("tecla:"+ev.key,ev.key);
+        }
+    });
+    document.addEventListener("keyup",function(ev) {
+        if(direcoes.includes(ev.key)) {
+            ev.preventDefault();
+            soltarMovimento("tecla:"+ev.key);
         }
     });
     document.querySelectorAll(".controle-seta").forEach(function(botao) {
-        let repeticao=null;
-        function parar(){if(repeticao!==null)clearInterval(repeticao);repeticao=null;}
         botao.addEventListener("pointerdown",function(ev) {
-            ev.preventDefault();parar();moverMerlin(botao.dataset.direcao);
-            repeticao=setInterval(()=>moverMerlin(botao.dataset.direcao),110);
+            ev.preventDefault();
+            iniciarMovimento("toque:"+ev.pointerId,botao.dataset.direcao);
             if(botao.setPointerCapture)botao.setPointerCapture(ev.pointerId);
         });
+        function parar(ev){soltarMovimento("toque:"+ev.pointerId);}
         botao.addEventListener("pointerup",parar);
         botao.addEventListener("pointercancel",parar);
         botao.addEventListener("lostpointercapture",parar);
     });
+    window.addEventListener("blur",pararMovimento);
+    document.addEventListener("visibilitychange",function() {
+        if(document.hidden)pararMovimento();
+    });
     document.getElementById("reiniciar-jogo").addEventListener("click",function() {
         if(!confirm("Reiniciar o jogo e apagar suas descobertas?"))return;
+        pararMovimento();
         especies.forEach(e=>armazenar(prefixo+e.id,false));
         armazenar(chaveAntiga,false);
         descobertas.clear();especieAberta=null;
