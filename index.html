@@ -54,9 +54,21 @@
 
 #imagem-merlin {
     width: 130px;
-    height: auto;
+    aspect-ratio: 3 / 2;
     display: block;
+    background: url("merlin-nadando.png") 0 0 / 200% 200% no-repeat;
     image-rendering: pixelated;
+}
+#merlin.nadando #imagem-merlin {
+    animation: nadadeiras-merlin 840ms steps(1, end) infinite;
+}
+@keyframes nadadeiras-merlin {
+    0%, 100% { background-position: 0 0; }
+    16.6667% { background-position: 100% 0; }
+    33.3333% { background-position: 0 0; }
+    50% { background-position: 100% 100%; }
+    66.6667% { background-position: 0 100%; }
+    83.3333% { background-position: 100% 100%; }
 }
 
         #nome {
@@ -277,7 +289,7 @@
         </div>
 
         <div id="merlin">
-    <img src="merlin.png" id="imagem-merlin">
+    <div id="imagem-merlin" role="img" aria-label="Merlin, a tartaruga"></div>
     <div id="nome">Merlin</div>
 </div>
 
@@ -399,6 +411,7 @@
     let ultimoMovimento = 0;
     function pararMovimento() {
         entradasMovimento.clear();
+        merlin.classList.remove("nadando");
         if(quadroMovimento!==null)cancelAnimationFrame(quadroMovimento);
         quadroMovimento=null;
     }
@@ -411,10 +424,13 @@
         ultimoMovimento=agora;
         if(dx || dy) {
             const passo = velocidade*intervalo/110/Math.hypot(dx,dy);
+            const anteriorX=posicaoX, anteriorY=posicaoY;
             posicaoX+=dx*passo;
             posicaoY+=dy*passo;
             renderizar(); verificarDescoberta();
+            merlin.classList.toggle("nadando",posicaoX!==anteriorX || posicaoY!==anteriorY);
         }
+        if(!dx && !dy)merlin.classList.remove("nadando");
         if(entradasMovimento.size)quadroMovimento=requestAnimationFrame(moverMerlin);
     }
     function iniciarMovimento(origem,direcao) {
